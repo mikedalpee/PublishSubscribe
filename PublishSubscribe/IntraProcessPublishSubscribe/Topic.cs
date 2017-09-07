@@ -2,9 +2,9 @@
 
 namespace PublishSubscribe.IntraProcessPublishSubscribe
 {
-    public abstract class Subject<T> : ISubject<T> where T : IComparable<T>
+    public abstract class Topic<T> : ITopic<T> where T : IComparable<T>
     {
-        public Subject(T identifier)
+        public Topic(T identifier)
         {
             Identifier = identifier;
         }

@@ -43,13 +43,13 @@
     <Compile Include="IntraProcessPublishSubscribe\Broker.cs" />
     <Compile Include="IntraProcessPublishSubscribe\BrokerSingleton.cs" />
     <Compile Include="IntraProcessPublishSubscribe\Publisher.cs" />
-    <Compile Include="IntraProcessPublishSubscribe\Subject.cs" />
+    <Compile Include="IntraProcessPublishSubscribe\Topic.cs" />
     <Compile Include="IntraProcessPublishSubscribe\Subscriber.cs" />
     <Compile Include="IPublishSubscribe\IBroker.cs" />
     <Compile Include="IPublishSubscribe\ISingleton.cs" />
     <Compile Include="IPublishSubscribe\IPublisher.cs" />
     <Compile Include="IPublishSubscribe\IPublishSubscribe.cs" />
-    <Compile Include="IPublishSubscribe\ISubject.cs" />
+    <Compile Include="IPublishSubscribe\ITopic.cs" />
     <Compile Include="IPublishSubscribe\ISubscriber.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

@@ -17,6 +17,6 @@ namespace PublishSubscribe.IntraProcessPublishSubscribe
             get;
             private set;
         }
-        public abstract void Notify(ISubject<T> subject, IPublisher<T> notifier);
+        public abstract void Notify(ITopic<T> topic, IPublisher<T> notifier);
     }
 }

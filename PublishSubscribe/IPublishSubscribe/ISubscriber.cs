@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace PublishSubscribe
 {
     /// <summary>
-    /// Defines a Subscriber that will receive Subject change notifications from Publishers to which the Subscriber is subscribed.
+    /// Defines a Subscriber that will receive Topic change notifications from Publishers to which the Subscriber is subscribed.
     /// </summary>
-    /// <typeparam name="T">The Subject Identifier type</typeparam>
+    /// <typeparam name="T">The Topic Identifier type</typeparam>
     public interface ISubscriber<T> where T : IComparable<T>
     {
         /// <summary>
@@ -23,12 +23,12 @@ namespace PublishSubscribe
             get;
         }
         /// <summary>
-        /// Called when a Publisher publishes change notifications for a Subject Identifier to which this Subscriber is subscribed.
+        /// Called when a Publisher publishes change notifications for a Topic Identifier to which this Subscriber is subscribed.
         /// </summary>
-        /// <param name="subject">The changed Subject.</param>
+        /// <param name="topic">The changed Topic.</param>
         /// <param name="notifier">The Publisher that made the change.</param>
         void Notify(
-            ISubject<T> subject,
+            ITopic<T> topic,
             IPublisher<T> notifier);
     }
 }

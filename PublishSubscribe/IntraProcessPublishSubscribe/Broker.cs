@@ -8,7 +8,7 @@ namespace PublishSubscribe.IntraProcessPublishSubscribe
 {
     public class Broker<T> : IBroker<T> where T : IComparable<T>
     {
-        public class PublisherNotRegisteredForSubjectException : Exception
+        public class PublisherNotRegisteredForTopicException : Exception
         {
         }
         private class Subscription
@@ -35,7 +35,7 @@ namespace PublishSubscribe.IntraProcessPublishSubscribe
         }
         public void Register(IPublisher<T> publisher, T identifier)
          {
-            // Enable an publisher to publish a particular subject
+            // Enable an publisher to publish a particular topic
 
             IList<IPublisher<T>> publishers;
 
@@ -132,7 +132,7 @@ namespace PublishSubscribe.IntraProcessPublishSubscribe
         }
         private  void RemovePublisher(IPublisher<T> publisher, T identifier)
         {
-            // Remove this publisher from being able to publish this subject
+            // Remove this publisher from being able to publish this topic
 
             IList<IPublisher<T>> publishers = m_publishers[identifier];
 
@@ -179,7 +179,7 @@ namespace PublishSubscribe.IntraProcessPublishSubscribe
         }
         public void Subscribe(ISubscriber<T> subscriber, T identifier)
         {
-            // Subscribe to a particular subject
+            // Subscribe to a particular topic
 
             IList<Subscription> subscriptions;
 
@@ -211,7 +211,7 @@ namespace PublishSubscribe.IntraProcessPublishSubscribe
         }
         public void Subscribe(ISubscriber<T> subscriber, T identifier, IPublisher<T> publisher)
         {
-            // Subscribe to a particular subject
+            // Subscribe to a particular topic
 
             IList<Subscription> subscriptions;
 
@@ -377,30 +377,30 @@ namespace PublishSubscribe.IntraProcessPublishSubscribe
                 Unsubscribe(identifier);
             }
         }
-        public void Publish(IPublisher<T> publisher, ISubject<T> subject)
+        public void Publish(IPublisher<T> publisher, ITopic<T> topic)
         {
             // A Publisher must explicitly register to enable publishing
 
-            if (!m_publishers.ContainsKey(subject.Identifier))
+            if (!m_publishers.ContainsKey(topic.Identifier))
             {
-                throw new PublisherNotRegisteredForSubjectException();
+                throw new PublisherNotRegisteredForTopicException();
             }
 
-            IList<IPublisher<T>> publishers = m_publishers[subject.Identifier];
+            IList<IPublisher<T>> publishers = m_publishers[topic.Identifier];
 
             if (!publishers.Contains(publisher))
             {
-                throw new PublisherNotRegisteredForSubjectException();
+                throw new PublisherNotRegisteredForTopicException();
 
             }
 
-            if (m_subscribers.ContainsKey(subject.Identifier))
+            if (m_subscribers.ContainsKey(topic.Identifier))
             {
-                IEnumerable<Subscription> subscriptions = m_subscribers[subject.Identifier].Where(s => (s.m_publisher == null || s.m_publisher == publisher));
+                IEnumerable<Subscription> subscriptions = m_subscribers[topic.Identifier].Where(s => (s.m_publisher == null || s.m_publisher == publisher));
 
                 foreach (var subscription in subscriptions)
                 {
-                    subscription.m_subscriber.Notify(subject, publisher);
+                    subscription.m_subscriber.Notify(topic, publisher);
                 }
             }
         }

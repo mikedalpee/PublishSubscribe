@@ -11,12 +11,12 @@ namespace UnitTest
     [TestClass]
     public class UnitTest1
     {
-        public class TestSubject : Subject<string>
+        public class TestTopic : Topic<string>
         {
             public string Data { get; private set; }
             public int Notifications { get; set; } = 0;
 
-            public TestSubject(string identifier, string data) : base(identifier)
+            public TestTopic(string identifier, string data) : base(identifier)
             {
                  Data = data;
             }
@@ -27,16 +27,16 @@ namespace UnitTest
             {
             }
 
-            public override void Notify(ISubject<string> subject, IPublisher<string> notifier)
+            public override void Notify(ITopic<string> topic, IPublisher<string> notifier)
             {
-                TestSubject testSubject = (TestSubject)subject;
+                TestTopic testTopic = (TestTopic)topic;
 
                 Debug.WriteLine(
                     "Subscriber " + Name +
                     " Received Notification from Publisher " + notifier.Name +
-                    " for Subject (" + testSubject.Identifier + "," + testSubject.Data + ")");
+                    " for Topic (" + testTopic.Identifier + "," + testTopic.Data + ")");
 
-                testSubject.Notifications++;
+                testTopic.Notifications++;
 
             }
         }
@@ -101,181 +101,181 @@ namespace UnitTest
         {
             MyBroker.Reset();
 
-            string subjectIdentifier1 = "Subject1";
-            string subjectIdentifier2 = "Subject2";
+            string topicIdentifier1 = "Topic1";
+            string topicIdentifier2 = "Topic2";
 
             // Create publisher1
 
             Publisher<string> publisher1 = new Publisher<string>("Publisher1");
 
-            // Ensure publisher1 is not registered to Subject1 nor any other publishers are registered
+            // Ensure publisher1 is not registered to Topic1 nor any other publishers are registered
 
-            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher1, subjectIdentifier1));
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier1) == 0);
+            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher1, topicIdentifier1));
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier1) == 0);
             Assert.IsTrue(MyBroker.Instance.PublisherCount() == 0);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier1).Count == 0);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier1).Count == 0);
             Assert.IsTrue(MyBroker.Instance.Publishers().Count == 0);
 
-            // Register publisher1 for subjectIdentifier1
+            // Register publisher1 for topicIdentifier1
 
-            MyBroker.Instance.Register(publisher1, subjectIdentifier1);
+            MyBroker.Instance.Register(publisher1, topicIdentifier1);
 
             // Ensure publisher1 was registered
 
-            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher1, subjectIdentifier1));
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier1) == 1);
+            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher1, topicIdentifier1));
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier1) == 1);
             Assert.IsTrue(MyBroker.Instance.PublisherCount() == 1);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier1).Count == 1);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier1).Count == 1);
             Assert.IsTrue(MyBroker.Instance.Publishers().Count == 1);
 
             // Ensure re-registering publisher1 has no effect
 
-            MyBroker.Instance.Register(publisher1, subjectIdentifier1);
+            MyBroker.Instance.Register(publisher1, topicIdentifier1);
 
-            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher1, subjectIdentifier1));
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier1) == 1);
+            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher1, topicIdentifier1));
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier1) == 1);
             Assert.IsTrue(MyBroker.Instance.PublisherCount() == 1);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier1).Count == 1);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier1).Count == 1);
             Assert.IsTrue(MyBroker.Instance.Publishers().Count == 1);
             // Create publisher2
 
             Publisher<string> publisher2 = new Publisher<string>("Publisher2");
 
-            // Ensure this publisher2 is not registered to Subject2
+            // Ensure this publisher2 is not registered to Topic2
 
-            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher2, subjectIdentifier2));
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier2) == 0);
+            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher2, topicIdentifier2));
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier2) == 0);
 
-            // Register publisher2 for subjectIdentifier1 and subjectIdentifier2
+            // Register publisher2 for topicIdentifier1 and topicIdentifier2
 
-            MyBroker.Instance.Register(publisher2, subjectIdentifier1);
-            MyBroker.Instance.Register(publisher2, subjectIdentifier2);
+            MyBroker.Instance.Register(publisher2, topicIdentifier1);
+            MyBroker.Instance.Register(publisher2, topicIdentifier2);
 
             // Ensure publisher2 was registered
 
-            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher2, subjectIdentifier1));
-            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher2, subjectIdentifier2));
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier1) == 2);
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier2) == 1);
+            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher2, topicIdentifier1));
+            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher2, topicIdentifier2));
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier1) == 2);
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier2) == 1);
             Assert.IsTrue(MyBroker.Instance.PublisherCount() == 2);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier1).Count == 2);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier2).Count == 1);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier1).Count == 2);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier2).Count == 1);
             Assert.IsTrue(MyBroker.Instance.Publishers().Count == 2);
 
-            // Unregister publisher1 form subjectIdentifier1
+            // Unregister publisher1 form topicIdentifier1
 
-            MyBroker.Instance.Unregister(publisher1, subjectIdentifier1);
+            MyBroker.Instance.Unregister(publisher1, topicIdentifier1);
 
             // Ensure pubisher1 was unregistered
 
-            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher1, subjectIdentifier1));
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier1) == 1);
+            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher1, topicIdentifier1));
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier1) == 1);
             Assert.IsTrue(MyBroker.Instance.PublisherCount() == 1);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier1).Count == 1);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier1).Count == 1);
             Assert.IsTrue(MyBroker.Instance.Publishers().Count == 1);
 
-            // Unregister publisher2 form subjectIdentifier1
+            // Unregister publisher2 form topicIdentifier1
 
-            MyBroker.Instance.Unregister(publisher2, subjectIdentifier1);
+            MyBroker.Instance.Unregister(publisher2, topicIdentifier1);
 
             // Ensure pubisher2 was unregistered
 
-            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher2, subjectIdentifier1));
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier1) == 0);
+            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher2, topicIdentifier1));
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier1) == 0);
             Assert.IsTrue(MyBroker.Instance.PublisherCount() == 1);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier1).Count == 0);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier1).Count == 0);
             Assert.IsTrue(MyBroker.Instance.Publishers().Count == 1);
 
-            // Unregister publisher2 form subjectIdentifier2
+            // Unregister publisher2 form topicIdentifier2
 
-            MyBroker.Instance.Unregister(publisher2, subjectIdentifier2);
+            MyBroker.Instance.Unregister(publisher2, topicIdentifier2);
 
             // Ensure pubisher2 was unregistered
 
-            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher2, subjectIdentifier2));
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier2) == 0);
+            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher2, topicIdentifier2));
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier2) == 0);
             Assert.IsTrue(MyBroker.Instance.PublisherCount() == 0);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier2).Count == 0);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier2).Count == 0);
             Assert.IsTrue(MyBroker.Instance.Publishers().Count == 0);
 
             // Reregister publisher1 and 2 as before
 
-            MyBroker.Instance.Register(publisher1, subjectIdentifier1);
-            MyBroker.Instance.Register(publisher2, subjectIdentifier1);
-            MyBroker.Instance.Register(publisher2, subjectIdentifier2);
+            MyBroker.Instance.Register(publisher1, topicIdentifier1);
+            MyBroker.Instance.Register(publisher2, topicIdentifier1);
+            MyBroker.Instance.Register(publisher2, topicIdentifier2);
 
             // Ensure publisher 1 and publisher2 are registered
 
-            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher1, subjectIdentifier1));
-            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher2, subjectIdentifier1));
-            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher2, subjectIdentifier2));
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier1) == 2);
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier2) == 1);
+            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher1, topicIdentifier1));
+            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher2, topicIdentifier1));
+            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher2, topicIdentifier2));
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier1) == 2);
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier2) == 1);
             Assert.IsTrue(MyBroker.Instance.PublisherCount() == 2);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier1).Count == 2);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier2).Count == 1);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier1).Count == 2);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier2).Count == 1);
             Assert.IsTrue(MyBroker.Instance.Publishers().Count == 2);
 
-            // Unregister publisher2 from all subjects
+            // Unregister publisher2 from all topics
 
             MyBroker.Instance.Unregister(publisher2);
 
             // Ensure publisher2 was unregistered
 
-            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher1, subjectIdentifier1));
-            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher2, subjectIdentifier1));
-            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher2, subjectIdentifier2));
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier1) == 1);
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier2) == 0);
+            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher1, topicIdentifier1));
+            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher2, topicIdentifier1));
+            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher2, topicIdentifier2));
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier1) == 1);
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier2) == 0);
             Assert.IsTrue(MyBroker.Instance.PublisherCount() == 1);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier1).Count == 1);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier2).Count == 0);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier1).Count == 1);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier2).Count == 0);
             Assert.IsTrue(MyBroker.Instance.Publishers().Count == 1);
 
-            // Unregister publisher1 from all subjects
+            // Unregister publisher1 from all topics
 
             MyBroker.Instance.Unregister(publisher1);
 
             // Ensure publisher1 was unregistered
 
-            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher1, subjectIdentifier1));
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier1) == 0);
+            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher1, topicIdentifier1));
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier1) == 0);
             Assert.IsTrue(MyBroker.Instance.PublisherCount() == 0);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier1).Count == 0);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier1).Count == 0);
             Assert.IsTrue(MyBroker.Instance.Publishers().Count == 0);
 
             // Reregister publisher1 and 2 as before
 
-            MyBroker.Instance.Register(publisher1, subjectIdentifier1);
-            MyBroker.Instance.Register(publisher2, subjectIdentifier1);
-            MyBroker.Instance.Register(publisher2, subjectIdentifier2);
+            MyBroker.Instance.Register(publisher1, topicIdentifier1);
+            MyBroker.Instance.Register(publisher2, topicIdentifier1);
+            MyBroker.Instance.Register(publisher2, topicIdentifier2);
 
             // Ensure publisher 1 and publisher2 are registered
 
-            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher1, subjectIdentifier1));
-            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher2, subjectIdentifier1));
-            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher2, subjectIdentifier2));
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier1) == 2);
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier2) == 1);
+            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher1, topicIdentifier1));
+            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher2, topicIdentifier1));
+            Assert.IsTrue(MyBroker.Instance.IsRegistered(publisher2, topicIdentifier2));
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier1) == 2);
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier2) == 1);
             Assert.IsTrue(MyBroker.Instance.PublisherCount() == 2);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier1).Count == 2);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier2).Count == 1);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier1).Count == 2);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier2).Count == 1);
             Assert.IsTrue(MyBroker.Instance.Publishers().Count == 2);
 
-            // Unregister publisher1 and publisher2 from all subjects
+            // Unregister publisher1 and publisher2 from all topics
 
             MyBroker.Instance.Unregister();
 
             // Ensure publisher1 and publisher2 were unregistered
 
-            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher1, subjectIdentifier1));
-            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher2, subjectIdentifier1));
-            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher2, subjectIdentifier2));
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier1) == 0);
-            Assert.IsTrue(MyBroker.Instance.PublisherCount(subjectIdentifier2) == 0);
+            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher1, topicIdentifier1));
+            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher2, topicIdentifier1));
+            Assert.IsFalse(MyBroker.Instance.IsRegistered(publisher2, topicIdentifier2));
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier1) == 0);
+            Assert.IsTrue(MyBroker.Instance.PublisherCount(topicIdentifier2) == 0);
             Assert.IsTrue(MyBroker.Instance.PublisherCount() == 0);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier1).Count == 0);
-            Assert.IsTrue(MyBroker.Instance.Publishers(subjectIdentifier2).Count == 0);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier1).Count == 0);
+            Assert.IsTrue(MyBroker.Instance.Publishers(topicIdentifier2).Count == 0);
             Assert.IsTrue(MyBroker.Instance.Publishers().Count == 0);
         }
         [TestMethod]
@@ -283,8 +283,8 @@ namespace UnitTest
         {
             MyBroker.Reset();
 
-            string subjectIdentifier1 = "Subject1";
-            string subjectIdentifier2 = "Subject2";
+            string topicIdentifier1 = "Topic1";
+            string topicIdentifier2 = "Topic2";
 
             // Create publishers
 
@@ -293,7 +293,7 @@ namespace UnitTest
 
             // Register publishers
 
-            MyBroker.Instance.Register(publisher1, subjectIdentifier1);
+            MyBroker.Instance.Register(publisher1, topicIdentifier1);
 
             // Create subscribers
 
@@ -302,57 +302,57 @@ namespace UnitTest
             Subscriber<string> subscriber3 = new TestSubscriber("Subscriber3");
             Subscriber<string> subscriber4 = new TestSubscriber("Subscriber4");
 
-            // Ensure nothing is subscribed to the subjects
+            // Ensure nothing is subscribed to the topics
 
             Assert.IsFalse(MyBroker.Instance.IsSubscribed());
 
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subjectIdentifier1));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subjectIdentifier2));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(topicIdentifier1));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(topicIdentifier2));
 
             Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber1));
             Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber2));
             Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber3));
             Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber4));
 
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber1, subjectIdentifier1));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber1, subjectIdentifier2));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber2, subjectIdentifier1));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber2, subjectIdentifier2));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber3, subjectIdentifier1));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber3, subjectIdentifier2));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber4, subjectIdentifier1));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber4, subjectIdentifier2));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber1, topicIdentifier1));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber1, topicIdentifier2));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber2, topicIdentifier1));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber2, topicIdentifier2));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber3, topicIdentifier1));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber3, topicIdentifier2));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber4, topicIdentifier1));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber4, topicIdentifier2));
 
-            // Subscribe subscriber1 to subjectIdentifier1
+            // Subscribe subscriber1 to topicIdentifier1
 
-            MyBroker.Instance.Subscribe(subscriber1, subjectIdentifier1);
+            MyBroker.Instance.Subscribe(subscriber1, topicIdentifier1);
 
-            // Ensure subscriber1 was subscribed to subjectIdentifier1
+            // Ensure subscriber1 was subscribed to topicIdentifier1
 
             Assert.IsTrue(MyBroker.Instance.IsSubscribed());
 
-            Assert.IsTrue(MyBroker.Instance.IsSubscribed(subjectIdentifier1));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subjectIdentifier2));
+            Assert.IsTrue(MyBroker.Instance.IsSubscribed(topicIdentifier1));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(topicIdentifier2));
 
             Assert.IsTrue(MyBroker.Instance.IsSubscribed(subscriber1));
             Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber2));
             Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber3));
             Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber4));
 
-            Assert.IsTrue(MyBroker.Instance.IsSubscribed(subscriber1, subjectIdentifier1));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber1, subjectIdentifier2));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber2, subjectIdentifier1));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber2, subjectIdentifier2));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber3, subjectIdentifier1));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber3, subjectIdentifier2));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber4, subjectIdentifier1));
-            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber4, subjectIdentifier2));
+            Assert.IsTrue(MyBroker.Instance.IsSubscribed(subscriber1, topicIdentifier1));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber1, topicIdentifier2));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber2, topicIdentifier1));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber2, topicIdentifier2));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber3, topicIdentifier1));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber3, topicIdentifier2));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber4, topicIdentifier1));
+            Assert.IsFalse(MyBroker.Instance.IsSubscribed(subscriber4, topicIdentifier2));
 
-            MyBroker.Instance.Subscribe(subscriber2, subjectIdentifier1);
-            MyBroker.Instance.Subscribe(subscriber2, subjectIdentifier2);
-            MyBroker.Instance.Subscribe(subscriber3, subjectIdentifier1);
-            MyBroker.Instance.Subscribe(subscriber3, subjectIdentifier2);
-            MyBroker.Instance.Subscribe(subscriber4, subjectIdentifier2);
+            MyBroker.Instance.Subscribe(subscriber2, topicIdentifier1);
+            MyBroker.Instance.Subscribe(subscriber2, topicIdentifier2);
+            MyBroker.Instance.Subscribe(subscriber3, topicIdentifier1);
+            MyBroker.Instance.Subscribe(subscriber3, topicIdentifier2);
+            MyBroker.Instance.Subscribe(subscriber4, topicIdentifier2);
 
             Assert.IsTrue(MyBroker.Instance.SubscriberCount() == 4);
         }
@@ -362,8 +362,8 @@ namespace UnitTest
         {
             MyBroker.Reset();
 
-            string identifier1 = "subject1";
-            string identifier2 = "subject2";
+            string identifier1 = "topic1";
+            string identifier2 = "topic2";
 
             Publisher<string> publisher1 = new Publisher<string>("Publisher1");
             Publisher<string> publisher2 = new Publisher<string>("Publisher2");
@@ -383,14 +383,14 @@ namespace UnitTest
             MyBroker.Instance.Subscribe(subscriber3, identifier2);
             MyBroker.Instance.Subscribe(subscriber4, identifier2);
 
-            TestSubject testSubject1;
-            TestSubject testSubject2;
+            TestTopic testTopic1;
+            TestTopic testTopic2;
 
-            MyBroker.Instance.Publish(publisher1, testSubject1 = new TestSubject(identifier1, "(testSubject1)"+GetCallSite()));
-            MyBroker.Instance.Publish(publisher2, testSubject2 = new TestSubject(identifier2, "(testSubject2)"+GetCallSite()));
+            MyBroker.Instance.Publish(publisher1, testTopic1 = new TestTopic(identifier1, "(testTopic1)"+GetCallSite()));
+            MyBroker.Instance.Publish(publisher2, testTopic2 = new TestTopic(identifier2, "(testTopic2)"+GetCallSite()));
 
-            Assert.IsTrue(testSubject1.Notifications == 2);
-            Assert.IsTrue(testSubject2.Notifications == 3);
+            Assert.IsTrue(testTopic1.Notifications == 2);
+            Assert.IsTrue(testTopic2.Notifications == 3);
 
             MyBroker.Instance.Unsubscribe();
 
@@ -400,17 +400,17 @@ namespace UnitTest
             MyBroker.Instance.Subscribe(subscriber3, identifier2, publisher1);
             MyBroker.Instance.Subscribe(subscriber4, identifier2, publisher2);
 
-            MyBroker.Instance.Publish(publisher1, testSubject1 = new TestSubject(identifier1, "(testSubject1)" + GetCallSite()));
+            MyBroker.Instance.Publish(publisher1, testTopic1 = new TestTopic(identifier1, "(testTopic1)" + GetCallSite()));
 
-            Assert.IsTrue(testSubject1.Notifications == 1);
+            Assert.IsTrue(testTopic1.Notifications == 1);
 
-            MyBroker.Instance.Publish(publisher1, testSubject2 = new TestSubject(identifier2, "(testSubject2)" + GetCallSite()));
+            MyBroker.Instance.Publish(publisher1, testTopic2 = new TestTopic(identifier2, "(testTopic2)" + GetCallSite()));
 
-            Assert.IsTrue(testSubject2.Notifications == 2);
+            Assert.IsTrue(testTopic2.Notifications == 2);
 
-            MyBroker.Instance.Publish(publisher2, testSubject2 = new TestSubject(identifier2, "(testSubject2)" + GetCallSite()));
+            MyBroker.Instance.Publish(publisher2, testTopic2 = new TestTopic(identifier2, "(testTopic2)" + GetCallSite()));
 
-            Assert.IsTrue(testSubject2.Notifications == 1);
+            Assert.IsTrue(testTopic2.Notifications == 1);
         }
     }
 }
