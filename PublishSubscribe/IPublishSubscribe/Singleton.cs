@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PublishSubscribe.IPublishSubscribe
 {
-    public abstract class ISingleton<S>
+    public class Singleton<S>
     {
         public class DuplicateNameError : Exception
         {
@@ -24,7 +24,7 @@ namespace PublishSubscribe.IPublishSubscribe
 
         private static IDictionary<string, S> s_instances = new Dictionary<string, S>();
 
-        public ISingleton(string name,Func<string,S> create)
+        public Singleton(string name,Func<string,S> create)
         {
             if (s_instances.ContainsKey(name))
             {

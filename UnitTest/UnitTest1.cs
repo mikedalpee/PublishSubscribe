@@ -51,7 +51,11 @@ namespace UnitTest
 
         public class MyBroker
         {
-            private static readonly Lazy<BrokerSingleton<string>> s_instance = new Lazy<BrokerSingleton<string>>(() => new BrokerSingleton<string>(MyBroker.Name));
+            private static readonly Broker<string> s_instance = 
+                new Lazy<Singleton<Broker<string>>>(
+                    () => new Singleton<Broker<string>>(
+                            MyBroker.Name,
+                            x => new Broker<string>(x))).Value.Instance(MyBroker.Name);
 
             public static string Name
             {
@@ -65,14 +69,14 @@ namespace UnitTest
             {
                 get
                 {
-                    return s_instance.Value.Instance(MyBroker.Name);
+                    return s_instance;
                 }
             }
 
             public static void Reset()
             {
-                s_instance.Value.Instance(MyBroker.Name).Unsubscribe();
-                s_instance.Value.Instance(MyBroker.Name).Unregister();
+                s_instance.Unsubscribe();
+                s_instance.Unregister();
             }
         }
         [TestMethod]

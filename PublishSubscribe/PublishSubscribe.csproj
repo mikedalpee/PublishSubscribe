@@ -41,12 +41,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IntraProcessPublishSubscribe\Broker.cs" />
-    <Compile Include="IntraProcessPublishSubscribe\BrokerSingleton.cs" />
     <Compile Include="IntraProcessPublishSubscribe\Publisher.cs" />
     <Compile Include="IntraProcessPublishSubscribe\Topic.cs" />
     <Compile Include="IntraProcessPublishSubscribe\Subscriber.cs" />
     <Compile Include="IPublishSubscribe\IBroker.cs" />
-    <Compile Include="IPublishSubscribe\ISingleton.cs" />
+    <Compile Include="IPublishSubscribe\Singleton.cs" />
     <Compile Include="IPublishSubscribe\IPublisher.cs" />
     <Compile Include="IPublishSubscribe\IPublishSubscribe.cs" />
     <Compile Include="IPublishSubscribe\ITopic.cs" />
