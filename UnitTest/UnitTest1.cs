@@ -51,11 +51,10 @@ namespace UnitTest
 
         public class MyBroker
         {
-            private static readonly Broker<string> s_instance = 
-                new Lazy<Singleton<Broker<string>>>(
-                    () => new Singleton<Broker<string>>(
-                            MyBroker.Name,
-                            x => new Broker<string>(x))).Value.Instance(MyBroker.Name);
+             private static readonly Broker<string> s_instance = 
+                SingletonManager<Broker<string>>.Register(
+                    MyBroker.Name,
+                    new Broker<string>(MyBroker.Name));
 
             public static string Name
             {

@@ -3,11 +3,19 @@ using System.Collections.Generic;
 
 namespace PublishSubscribe.IPublishSubscribe
 {
-    public class Singleton<S>
+    public class SingletonManager<S>
     {
         public class DuplicateNameError : Exception
         {
             public DuplicateNameError(string name)
+            :
+                base("Singleton name " + name + " already exists.")
+            {
+            }
+        }
+        public class DuplicateSingletonError : Exception
+        {
+            public DuplicateSingletonError(string name)
             :
                 base("Singleton " + name + " already exists.")
             {
@@ -17,23 +25,30 @@ namespace PublishSubscribe.IPublishSubscribe
         {
             public UndefinedNameError(string name)
             :
-                base("Singleton " + name + " does not exist.")
+                base("Singleton name " + name + " does not exist.")
             {
             }
         }
 
         private static IDictionary<string, S> s_instances = new Dictionary<string, S>();
 
-        public Singleton(string name,Func<string,S> create)
+        public static S Register(string name,S singleton)
         {
             if (s_instances.ContainsKey(name))
             {
                 throw new DuplicateNameError(name);
             }
 
-            Instances[name] = create(name);
+            if (s_instances.Values.Contains(singleton))
+            {
+                throw new DuplicateSingletonError(name);
+            }
+
+            Instances[name] = singleton;
+
+            return singleton;
         }
-        public S Instance(string name)
+        public static S Instance(string name)
         {
             if (! Instances.ContainsKey(name))
             {
@@ -42,7 +57,7 @@ namespace PublishSubscribe.IPublishSubscribe
 
             return Instances[name];
         }
-        protected static IDictionary<string, S> Instances
+        private static IDictionary<string, S> Instances
         {
             get
             {
